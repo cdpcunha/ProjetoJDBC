@@ -10,7 +10,7 @@ public class Main {
 	public static void main(String[] args) {
 	
 	SellerDAO sellerDao = new SellerJDBC(DB.getConnection());	
-	Seller seller = sellerDao.findByID(6);
+	Seller seller = sellerDao.findByID(1);
 	
 	System.out.println(seller);
 	}
