@@ -10,4 +10,4 @@ public interface DepartmentDAO {
 	void deleteByID(Department obj);
 	Department findByID(int id);
 	List<Department> findAll();
-}
+	}

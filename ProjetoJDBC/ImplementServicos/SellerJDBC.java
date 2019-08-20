@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import InterfaceServicos.SellerDAO;
@@ -11,29 +12,50 @@ import ObjetosEntidades.Department;
 import ObjetosEntidades.Seller;
 import db.DB;
 
-public class SellerJDBC implements SellerDAO{
+public class SellerJDBC implements SellerDAO {
 
 	private Connection conn;
-	
+
 	public SellerJDBC(Connection conn) {
 		this.conn = conn;
 	}
-	
+
 	@Override
 	public void insert(Seller obj) {
-			
+
 	}
 
 	@Override
 	public void update(Seller obj) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteByID(Seller obj) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public ArrayList<Seller> findByDepartment(int id) {
+		List<Seller> selList = new ArrayList<Seller>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement(
+					"SELECT S.*, D.NameDep FROM seller S JOIN Department D on S.DepartmentId = D.Id where S.DepartmentId = ? ORDER BY NAME");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Department dep = InstanciaDep(rs);
+				Seller sel = InstanciaSel(rs, dep);
+				selList.add(sel);
+			}
+			return (ArrayList<Seller>) selList;
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+			return null;
+		}
 	}
 
 	@Override
@@ -41,19 +63,18 @@ public class SellerJDBC implements SellerDAO{
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps=conn.prepareStatement("SELECT S.*, D.NameDep FROM seller S JOIN department D ON S.DepartmentId = D.Id WHERE S.Id = ?");
+			ps = conn.prepareStatement(
+					"SELECT S.*, D.NameDep FROM seller S JOIN department D ON S.DepartmentId = D.Id WHERE S.Id = ?");
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				Department dep = InstanciaDep(rs);
 				Seller sel = InstanciaSel(rs, dep);
 				return sel;
 			}
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			System.out.println(e.getLocalizedMessage());
-		}
-		finally {
+		} finally {
 			DB.closeResultSet(rs);
 			DB.closeResultSet(rs);
 		}
@@ -72,10 +93,10 @@ public class SellerJDBC implements SellerDAO{
 	}
 
 	private Department InstanciaDep(ResultSet rs) throws SQLException {
-			Department dep = new Department();
-			dep.setId(rs.getInt("DepartmentId"));
-			dep.setNome(rs.getString("NameDep"));
-			return dep;	
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setNome(rs.getString("NameDep"));
+		return dep;
 	}
 
 	@Override
