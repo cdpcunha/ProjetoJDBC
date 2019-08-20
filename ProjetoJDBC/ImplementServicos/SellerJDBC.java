@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import InterfaceServicos.SellerDAO;
 import ObjetosEntidades.Department;
@@ -21,8 +24,37 @@ public class SellerJDBC implements SellerDAO {
 	}
 
 	@Override
-	public void insert(Seller obj) {
+	public void insert() throws SQLException, ParseException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Scanner sc = new Scanner(System.in);
+		conn = DB.getConnection();
+		ps = conn.prepareStatement(
+				"INSERT INTO SELLER (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES (?,?,?,?,?)");
+		
+		System.out.println("Entre com os dados do Vendedor");
+		System.out.print("Nome :");
+		String strAux = sc.nextLine();
+		ps.setString(1, strAux);
+		System.out.print("Email :");
+		strAux = sc.nextLine();
+		ps.setString(2, strAux);
+		System.out.println("Data de Nascimento : ");
+		java.sql.Date sqlDate = new java.sql.Date(sdf.parse(sc.nextLine()).getTime());
+		ps.setDate(3, sqlDate);// Datas em SQL devem ser neste formato
+		System.out.print("Salário :");
+		Double dblAux = sc.nextDouble();
+		ps.setDouble(4, dblAux);
+		System.out.print("Departamento : ");
+		Integer intAux = sc.nextInt();
+		ps.setDouble(5, intAux);
+		sc.nextLine();
 
+		int rowsAffected = ps.executeUpdate();
+
+		System.out.println("Insert completo com " + rowsAffected + " coluna(s) afetada(s).");
+		sc.close();
 	}
 
 	@Override

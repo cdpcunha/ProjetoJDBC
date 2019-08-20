@@ -1,5 +1,7 @@
 package Programa;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,6 +31,15 @@ public class Main {
 	for(Seller x: listSel) {
 		System.out.println(x);
 	}
+	try {
+		sellerDao.insert();
+	}catch (SQLException e) {
+		System.out.println(e.getLocalizedMessage());
+	}catch (ParseException e) {
+		System.out.println(e.getLocalizedMessage());
+	}
+	
+	
 	sc.close();
 	}
 
