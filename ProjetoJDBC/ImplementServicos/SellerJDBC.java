@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import InterfaceServicos.SellerDAO;
@@ -24,15 +26,12 @@ public class SellerJDBC implements SellerDAO {
 	}
 
 	@Override
-	public void insert() throws SQLException, ParseException {
-		Connection conn = null;
+	public void insert(Scanner sc) throws SQLException, ParseException {
+		Connection conn = this.conn;
 		PreparedStatement ps = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Scanner sc = new Scanner(System.in);
-		conn = DB.getConnection();
 		ps = conn.prepareStatement(
 				"INSERT INTO SELLER (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES (?,?,?,?,?)");
-		
 		System.out.println("Entre com os dados do Vendedor");
 		System.out.print("Nome :");
 		String strAux = sc.nextLine();
@@ -50,17 +49,31 @@ public class SellerJDBC implements SellerDAO {
 		Integer intAux = sc.nextInt();
 		ps.setDouble(5, intAux);
 		sc.nextLine();
-
 		int rowsAffected = ps.executeUpdate();
-
 		System.out.println("Insert completo com " + rowsAffected + " coluna(s) afetada(s).");
-		sc.close();
 	}
 
 	@Override
-	public void update(Seller obj) {
-		// TODO Auto-generated method stub
+	public void updateSalario() {
+		Connection conn = this.conn;
+		PreparedStatement ps = null;
+		Scanner sc = new Scanner(System.in);
+		try {
+			ps = conn.prepareStatement("UPDATE SELLER SET BaseSalary = ? WHERE Id = ?");
+			System.out.println("Informe os dados da alteração : ");
+			System.out.print("Código (Id) do Vendedor a ser atualizado : ");
+			double auxDouble = sc.nextDouble();
+			ps.setDouble(2, auxDouble);
+			System.out.print("Novo Salário : ");
+			auxDouble = sc.nextDouble();
+			ps.setDouble(1, auxDouble);
+			int rowsAffected = ps.executeUpdate();
+			System.out.println("Update completo com " + rowsAffected + " coluna(s) afetada(s).");
 
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+		sc.close();
 	}
 
 	@Override
@@ -69,17 +82,25 @@ public class SellerJDBC implements SellerDAO {
 
 	}
 
-	public ArrayList<Seller> findByDepartment(int id) {
+	@Override
+	public ArrayList<Seller> findByDepartment(Department department) {
 		List<Seller> selList = new ArrayList<Seller>();
+		Map<Integer, Department> map = new HashMap<>();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+
 		try {
 			ps = conn.prepareStatement(
 					"SELECT S.*, D.NameDep FROM seller S JOIN Department D on S.DepartmentId = D.Id where S.DepartmentId = ? ORDER BY NAME");
-			ps.setInt(1, id);
+			ps.setInt(1, department.getId());
 			rs = ps.executeQuery();
+
 			while (rs.next()) {
-				Department dep = InstanciaDep(rs);
+				Department dep = map.get(rs.getInt("DepartmentId"));
+				if (dep == null) {
+					dep = InstanciaDep(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+				}
 				Seller sel = InstanciaSel(rs, dep);
 				selList.add(sel);
 			}

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import ImplementServicos.SellerJDBC;
 import InterfaceServicos.SellerDAO;
+import ObjetosEntidades.Department;
 import ObjetosEntidades.Seller;
 import db.DB;
 
@@ -16,6 +17,8 @@ public class Main {
 	public static void main(String[] args) {
 	SellerDAO sellerDao = new SellerJDBC(DB.getConnection());
 	Scanner sc = new Scanner(System.in);
+	
+	
 	
 	System.out.print("Entre com o código do vendedor a ser pesquisado : ");
 	Integer idvar = sc.nextInt();
@@ -27,12 +30,18 @@ public class Main {
 	idvar = sc.nextInt();
 	sc.nextLine();
 	List<Seller> listSel = new ArrayList<Seller>();
-	listSel = sellerDao.findByDepartment(idvar);
+	Department dep = new Department(idvar, null);
+	listSel = sellerDao.findByDepartment(dep);
+	
+	
 	for(Seller x: listSel) {
 		System.out.println(x);
 	}
+	
+	
+	//Insert
 	try {
-		sellerDao.insert();
+		sellerDao.insert(sc);
 	}catch (SQLException e) {
 		System.out.println(e.getLocalizedMessage());
 	}catch (ParseException e) {
@@ -40,6 +49,8 @@ public class Main {
 	}
 	
 	
+	sellerDao.updateSalario();
+		
 	sc.close();
 	}
 

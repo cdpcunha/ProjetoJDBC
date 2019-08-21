@@ -3,13 +3,16 @@ package InterfaceServicos;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Scanner;
+
+import ObjetosEntidades.Department;
 import ObjetosEntidades.Seller;
 
 public interface SellerDAO {
-	void insert() throws SQLException, ParseException;
-	void update(Seller obj);
+	void insert(Scanner sc) throws SQLException, ParseException;
 	void deleteByID(Seller obj);
 	Seller findByID(int id);
 	List<Seller> findAll();
-	List<Seller> findByDepartment(int id);
+	List<Seller> findByDepartment(Department dep);
+	void updateSalario();
 }
