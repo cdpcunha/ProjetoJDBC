@@ -52,6 +52,27 @@ public class SellerJDBC implements SellerDAO {
 		int rowsAffected = ps.executeUpdate();
 		System.out.println("Insert completo com " + rowsAffected + " coluna(s) afetada(s).");
 	}
+	
+	public void updateSeller(Seller obj) {
+		Connection conn = this.conn;
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement(
+					"UPDATE SELLER SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? WHERE Id = ? ");
+			ps.setString(1, obj.getName());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+			ps.setDouble(4, obj.getSalary());
+			ps.setInt(5, obj.getDepartment().getId());
+			ps.setInt(6, obj.getId());
+			int rowsAffected = ps.executeUpdate();
+			System.out.println(
+					"Update completo com " + rowsAffected + " coluna(s) afetada(s) no vendedor de Id = " + obj.getId());
+
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+	}
 
 	@Override
 	public void updateSalario() {

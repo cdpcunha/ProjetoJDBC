@@ -14,5 +14,6 @@ public interface SellerDAO {
 	Seller findByID(int id);
 	List<Seller> findAll();
 	List<Seller> findByDepartment(Department dep);
+	void updateSeller(Seller obj);
 	void updateSalario();
 }
