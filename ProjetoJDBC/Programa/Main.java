@@ -25,7 +25,7 @@ public class Main {
 	sc.nextLine();
 	Seller seller = sellerDao.findByID(idvar);
 	System.out.println(seller);
-	
+	System.out.println("------------------------------------------------------------------------------------");
 	System.out.print("Entre com o código do departamento a ser pesquisado : ");
 	idvar = sc.nextInt();
 	sc.nextLine();
@@ -33,11 +33,17 @@ public class Main {
 	Department dep = new Department(idvar, null);
 	listSel = sellerDao.findByDepartment(dep);
 	
-	
+	System.out.println("------------------------------------------------------------------------------------");
 	for(Seller x: listSel) {
 		System.out.println(x);
 	}
 	
+	System.out.println("------------------------------------------------------------------------------------");
+	listSel = sellerDao.findAll();
+	for(Seller x: listSel) {
+		System.out.println(x);
+	}
+	System.out.println("------------------------------------------------------------------------------------");
 	
 	//Insert
 	try {

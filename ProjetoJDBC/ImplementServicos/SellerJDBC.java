@@ -134,6 +134,29 @@ public class SellerJDBC implements SellerDAO {
 		return null;
 	}
 
+	@Override
+	public List<Seller> findAll() {
+		List<Seller> selList = new ArrayList<Seller>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			ps = conn.prepareStatement(
+					"SELECT S.*, D.NameDep FROM seller S JOIN Department D on S.DepartmentId = D.Id ORDER BY S.Id");
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Department dep = InstanciaDep(rs);
+				Seller sel = InstanciaSel(rs, dep);
+				selList.add(sel);
+			}
+			return (ArrayList<Seller>) selList;
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+			return null;
+		}
+	}
+
 	private Seller InstanciaSel(ResultSet rs, Department dep) throws SQLException {
 		Seller sel = new Seller();
 		sel.setId(rs.getInt("Id"));
@@ -150,12 +173,6 @@ public class SellerJDBC implements SellerDAO {
 		dep.setId(rs.getInt("DepartmentId"));
 		dep.setNome(rs.getString("NameDep"));
 		return dep;
-	}
-
-	@Override
-	public List<Seller> findAll() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
