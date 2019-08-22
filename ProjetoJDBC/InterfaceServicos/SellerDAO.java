@@ -10,7 +10,7 @@ import ObjetosEntidades.Seller;
 
 public interface SellerDAO {
 	void insert(Scanner sc) throws SQLException, ParseException;
-	void deleteByID(Seller obj);
+	void deleteByID(Integer id);
 	Seller findByID(int id);
 	List<Seller> findAll();
 	List<Seller> findByDepartment(Department dep);

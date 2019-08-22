@@ -23,7 +23,7 @@ public class Main {
 		Department dep = new Department();
 		List<Seller> listSel = new ArrayList<Seller>();
 
-		System.out.print("Pesquisar vendedor (s/n)?");
+		System.out.print("Pesquisar vendedor (s/n)? ");
 		op = sc.nextLine().charAt(0);
 		if (op == 's') {
 			System.out.print("Entre com o código do vendedor a ser pesquisado : ");
@@ -34,7 +34,7 @@ public class Main {
 			System.out.println("------------------------------------------------------------------------------------");
 		}
 
-		System.out.print("Pesquisar departamento (s/n)?");
+		System.out.print("Pesquisar departamento (s/n)? ");
 		op = sc.nextLine().charAt(0);
 		if (op == 's') {
 			System.out.print("Entre com o código do departamento a ser pesquisado : ");
@@ -56,7 +56,7 @@ public class Main {
 			System.out.println(x);
 		}
 		System.out.println("------------------------------------------------------------------------------------");
-System.out.print("Inserir novo Vendedor (s/n)?");
+		System.out.print("Inserir novo Vendedor (s/n)? ");
 		op = sc.nextLine().charAt(0);
 		if (op == 's') {
 			try {
@@ -68,13 +68,25 @@ System.out.print("Inserir novo Vendedor (s/n)?");
 			}
 		}
 
-		System.out.print("Qual o ID do vendedor a ser alterado ?");
-		idvar = sc.nextInt();
-		sc.nextLine();
-		seller = sellerDao.findByID(idvar);
-		seller.setName("Teste de renomeação");
-		sellerDao.updateSeller(seller);
-
+		System.out.print("Atualizar registro de Vendedor (s/n)? ");
+		op = sc.nextLine().charAt(0);
+		if (op == 's') {
+			System.out.print("Qual o ID do vendedor a ser alterado ?");
+			idvar = sc.nextInt();
+			sc.nextLine();
+			seller = sellerDao.findByID(idvar);
+			seller.setName("Teste de renomeação");
+			sellerDao.updateSeller(seller);
+		}
+		
+		System.out.print("Deletar vendedor (s/n)? ");
+		op = sc.nextLine().charAt(0);
+		if(op == 's') {
+			System.out.print("Código do vendedor a ser remevodio : ");
+			idvar = sc.nextInt();
+			sc.nextLine();
+			sellerDao.deleteByID(idvar);
+		}
 		sc.close();
 	}
 
